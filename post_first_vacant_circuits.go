@@ -8,7 +8,8 @@ import (
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
 
-func PutFirstVacantTarget(description, comments, token string) (string, string) {
+//PostFirstVacantTarget gets first vacant target and makes new circuit
+func PostFirstVacantTarget(description, comments, token string) (string, string) {
 	vt, err := GetVacantVPLSTarget()
 	if err != nil {
 		log.Println(err)
