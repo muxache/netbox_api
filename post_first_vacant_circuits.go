@@ -18,7 +18,7 @@ func PostFirstVacantTarget(description, comments, token string) (string, string)
 
 	var nt netbox.Netbox_Circuits_PUT
 
-	nt.Cid = vt.VacantT
+	nt.Cid = "target:" + vt.VacantT
 	nt.Type.ID = 1
 	nt.Provider.ID = 2
 	nt.Description = description
