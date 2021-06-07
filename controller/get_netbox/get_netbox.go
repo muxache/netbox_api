@@ -1,0 +1,64 @@
+package get_netbox
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/url"
+	"strconv"
+
+	"github.com/muxache/netbox_api/data_model/netbox"
+)
+
+func GetToNetBox(url, token string) netbox.Netbox_Struct {
+	var (
+		limit  int
+		newUrl string
+		nb     netbox.Netbox_Struct
+	)
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", token)
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error when sending request to the server")
+	}
+	defer resp.Body.Close()
+	json.NewDecoder(resp.Body).Decode(&nb)
+	if len(nb.Next) != 0 {
+		limit, _ = strconv.Atoi(URLParse(nb.Next)["limit"][0])
+		newUrl = nb.Next
+		for i := limit; i <= nb.Count; i += limit {
+
+			reqnext, _ := http.NewRequest("GET", newUrl, nil)
+			reqnext.Header.Add("accept", "application/json")
+			reqnext.Header.Add("Authorization", "Token 037e1253c5d6ee171d36df4bac2fba4ad8444ef7")
+			respnext, err1 := client.Do(reqnext)
+			if err1 != nil {
+				fmt.Println("Error when sending request to the server")
+			}
+			defer respnext.Body.Close()
+			var pn netbox.Netbox_Struct
+			json.NewDecoder(respnext.Body).Decode(&pn)
+			newUrl = pn.Next
+			nb.Results = append(nb.Results, pn.Results...)
+		}
+	}
+	return nb
+}
+
+func URLParse(urlField string) url.Values {
+	u, _ := url.Parse(urlField)
+	m, _ := url.ParseQuery(u.RawQuery)
+	return m
+}
+
+func URLSet(urlField, newLimit, offset string) string {
+	u, _ := url.Parse(urlField)
+	q := u.Query()
+	q.Set("limit", newLimit)
+	q.Set("offset", offset)
+	u.RawQuery = q.Encode()
+	return u.String()
+}
