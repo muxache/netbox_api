@@ -10,7 +10,7 @@ import (
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
 
-//GetFromNetBox returns netbox struct with any contained data
+//GetFromNetBox returns netbox struct with any contained data.
 func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 	var (
 		limit  int
