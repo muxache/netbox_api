@@ -34,7 +34,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 
 			reqnext, _ := http.NewRequest("GET", newUrl, nil)
 			reqnext.Header.Add("accept", "application/json")
-			reqnext.Header.Add("Authorization", "Token 037e1253c5d6ee171d36df4bac2fba4ad8444ef7")
+			reqnext.Header.Add("Authorization", token)
 			respnext, err1 := client.Do(reqnext)
 			if err1 != nil {
 				fmt.Println("Error when sending request to the server")

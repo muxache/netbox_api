@@ -7,7 +7,7 @@ import (
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
 
-//GetALLCircuits allows get all l2circuits from api 'https://netbox.ti.ru/api/circuits/circuits/'
+//GetALLCircuits allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
 func GetALLDevices(token string) []netbox.NetBox_Devices_GET {
 	var (
 		url        string = "https://netbox.ti.ru/api/dcim/devices/"
