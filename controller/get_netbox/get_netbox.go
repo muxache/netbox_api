@@ -39,7 +39,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 			reqnext.Header.Add("Authorization", token)
 			respnext, err1 := client.Do(reqnext)
 			if err1 != nil {
-				fmt.Println("Error in "+i+" when sending request to the server")
+				fmt.Printf("Error in %d when sending request to the server", i)
 				os.Exit(1)
 			}
 			defer respnext.Body.Close()
