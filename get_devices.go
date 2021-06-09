@@ -8,7 +8,7 @@ import (
 )
 
 //GetALLCircuits allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
-func GetALLDevices(token string) []netbox.NetBox_Devices_GET {
+func GetALLDevices(token string) {
 	var (
 		url        string = "https://netbox.ti.ru/api/dcim/devices/"
 		nbDevicesArr []netbox.NetBox_Devices_GET
@@ -18,7 +18,7 @@ func GetALLDevices(token string) []netbox.NetBox_Devices_GET {
 		var nbDevices netbox.NetBox_Devices_GET
 		rByte, _ := json.Marshal(r)
 		json.Unmarshal(rByte, &nbDevices)
-		nbDevicesArr = append(nbDevicesArr, nbDevices)
+		fmt.Println(nbDevices.Name)
 	}
-	return nbDevicesArr
+	
 }
