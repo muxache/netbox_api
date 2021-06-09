@@ -29,7 +29,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&nb)
-	if len(nb.Next) != 0 {
+	if len(nb.Next) != "null" {
 		limit, _ = strconv.Atoi(URLParse(nb.Next)["limit"][0])
 		newUrl = nb.Next
 		for i := limit; i <= nb.Count; i += limit {
