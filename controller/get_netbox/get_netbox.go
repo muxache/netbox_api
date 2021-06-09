@@ -24,6 +24,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error when sending request to the server")
+		os.Exit(1)
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&nb)
@@ -38,6 +39,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 			respnext, err1 := client.Do(reqnext)
 			if err1 != nil {
 				fmt.Println("Error when sending request to the server")
+				os.Exit(1)
 			}
 			defer respnext.Body.Close()
 			var pn netbox.Netbox_Struct
