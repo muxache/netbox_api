@@ -11,11 +11,10 @@ import (
 func GetALLDevices(token string) {
 	var (
 		url        string = "https://netbox.ti.ru/api/dcim/devices/"
-		nbDevicesArr []netbox.NetBox_Devices_GET
+		nbDevices netbox.NetBox_Devices_GET
 	)
 	res := get_netbox.GetFromNetBox(url, token)
 	for _, r := range res.Results {
-		var nbDevices netbox.NetBox_Devices_GET
 		rByte, _ := json.Marshal(r)
 		json.Unmarshal(rByte, &nbDevices)
 		fmt.Println(nbDevices.Name)
