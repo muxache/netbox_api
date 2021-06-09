@@ -2,7 +2,6 @@ package netbox_api
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/muxache/netbox_api/controller/get_netbox"
 	"github.com/muxache/netbox_api/data_model/netbox"
