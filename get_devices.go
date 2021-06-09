@@ -9,9 +9,9 @@ import (
 )
 
 //GetALLCircuits allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
-func GetALLDevices(token string) {
+func GetDevices(url, token string) {
 	var (
-		url        string = "https://netbox.ti.ru/api/dcim/devices/"
+		//url        string = "https://netbox.ti.ru/api/dcim/devices/"
 		nbDevices netbox.NetBox_Devices_Get
 	)
 	res := get_netbox.GetFromNetBox(url, token)
