@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 	"os"
+	"strconv"
 
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
@@ -29,7 +29,7 @@ func GetFromNetBox(url, token string) netbox.Netbox_Struct {
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&nb)
-	if len(nb.Next) != "null" {
+	if len(nb.Next) != 0 {
 		limit, _ = strconv.Atoi(URLParse(nb.Next)["limit"][0])
 		newUrl = nb.Next
 		for i := limit; i <= nb.Count; i += limit {
