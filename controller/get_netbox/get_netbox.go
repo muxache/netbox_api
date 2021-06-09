@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"os"
 
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
