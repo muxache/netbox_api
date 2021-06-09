@@ -14,7 +14,7 @@ func GetALLCircuits(token string) {
 		url        string = "https://netbox.ti.ru/api/circuits/circuits/"
 		nbCircuits netbox.Netbox_Circuits_Get
 	)
-	res := get_netbox.GetToNetBox(url, token)
+	res := get_netbox.GetFromNetBox(url, token)
 	for _, r := range res.Results {
 		rByte, _ := json.Marshal(r)
 		json.Unmarshal(rByte, &nbCircuits)
