@@ -11,7 +11,7 @@ import (
 func GetALLDevices(token string) {
 	var (
 		url        string = "https://netbox.ti.ru/api/dcim/devices/"
-		nbDevices netbox.NetBox_Devices_GET
+		nbDevices netbox.NetBox_Devices_Get
 	)
 	res := get_netbox.GetFromNetBox(url, token)
 	for _, r := range res.Results {
