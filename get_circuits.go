@@ -7,8 +7,8 @@ import (
 	"github.com/muxache/netbox_api/data_model/netbox"
 )
 
-//GetALLCircuits allows get all l2circuits from api 'https://netbox.ti.ru/api/circuits/circuits/'
-func GetALLCircuits(url, token string) []netbox.Netbox_Circuits_Get {
+//GetALLCircuits allows get all l2circuits from api 'https://netbox.ti.ru/api/circuits/circuits/'.
+func GetCircuits(url, token string) []netbox.Netbox_Circuits_Get {
 	var (
 		//url        string = "https://netbox.ti.ru/api/circuits/circuits/"
 
