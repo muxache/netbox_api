@@ -2,23 +2,22 @@ package netbox_api
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/muxache/netbox_api/controller/get_netbox"
-	"github.com/muxache/netbox_api/data_model/netbox"
+	model "github.com/muxache/netbox_api/data_model/netbox"
 )
 
 //GetALLCircuits allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
-func GetDevices(url, token string) {
+func GetDevices(url, token string) []model.NetBox_Devices_Get {
 	var (
-		//url        string = "https://netbox.ti.ru/api/dcim/devices/"
-		nbDevices netbox.NetBox_Devices_Get
+		nbDevices []model.NetBox_Devices_Get
 	)
 	res := get_netbox.GetFromNetBox(url, token)
 	for _, r := range res.Results {
+		var nb model.NetBox_Devices_Get
 		rByte, _ := json.Marshal(r)
-		json.Unmarshal(rByte, &nbDevices)
-		fmt.Println(nbDevices.Name)
+		json.Unmarshal(rByte, &nb)
+		nbDevices = append(nbDevices, nb)
 	}
-	
+	return nbDevices
 }
