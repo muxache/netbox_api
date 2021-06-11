@@ -2,63 +2,91 @@ package get_netbox
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"time"
 
-	"github.com/muxache/netbox_api/data_model/netbox"
+	model "github.com/muxache/netbox_api/data_model/netbox"
 )
 
+type HttpResponse struct {
+	URL      string
+	Response *http.Response
+	Error    error
+	Data     model.Netbox_Struct
+}
+
 //GetFromNetBox returns netbox struct with any contained data.
-func GetFromNetBox(url, token string) netbox.Netbox_Struct {
+func GetFromNetBox(url, token string) model.Netbox_Struct {
 	var (
-		limit  int
-		newUrl string
-		nb     netbox.Netbox_Struct
+		urlList []string
 	)
+
+	res := get(url, token)
+
+	for i := 1; i < (res.Count / 64); i++ {
+
+		urlList = append(urlList, urlSet(res.Next, "64", strconv.Itoa(64*i)))
+	}
+	return asyncHttpGets(urlList, token)
+
+}
+
+func get(url, token string) model.Netbox_Struct {
+	var nb model.Netbox_Struct
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("accept", "application/json")
 	req.Header.Add("Authorization", token)
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error when sending request to the server")
+		log.Println("Error when sending request to the server")
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&nb)
-	if len(nb.Next) != 0 {
-		limit, _ = strconv.Atoi(URLParse(nb.Next)["limit"][0])
-		newUrl = nb.Next
-		for i := limit; i <= nb.Count; i += limit {
-
-			reqnext, _ := http.NewRequest("GET", newUrl, nil)
-			reqnext.Header.Add("accept", "application/json")
-			reqnext.Header.Add("Authorization", token)
-			respnext, err1 := client.Do(reqnext)
-			if err1 != nil {
-				fmt.Printf("Error in %d when sending request to the server", i)
-				os.Exit(1)
-			}
-			defer respnext.Body.Close()
-			var pn netbox.Netbox_Struct
-			json.NewDecoder(respnext.Body).Decode(&pn)
-			newUrl = pn.Next
-			nb.Results = append(nb.Results, pn.Results...)
-		}
-	}
 	return nb
 }
 
-func URLParse(urlField string) url.Values {
-	u, _ := url.Parse(urlField)
-	m, _ := url.ParseQuery(u.RawQuery)
-	return m
+//asyncHttpGets makes assync get requests
+func asyncHttpGets(urls []string, token string) model.Netbox_Struct {
+	var nball model.Netbox_Struct
+	var urlsss []string
+	ch := make(chan *HttpResponse)
+	client := http.Client{}
+	for _, url := range urls {
+		go func(url string) {
+			var nb model.Netbox_Struct
+			req, _ := http.NewRequest("GET", url, nil)
+			req.Header.Add("accept", "application/json")
+			req.Header.Add("Authorization", token)
+			resp, err := client.Do(req)
+			json.NewDecoder(resp.Body).Decode(&nb)
+			ch <- &HttpResponse{url, resp, err, nb}
+			if err != nil && resp != nil && resp.StatusCode == http.StatusOK {
+				resp.Body.Close()
+			}
+		}(url)
+	}
+
+	for {
+		select {
+		case r := <-ch:
+			nball.Results = append(nball.Results, r.Data.Results...)
+			urlsss = append(urlsss, r.URL)
+			if len(urlsss) == len(urls) {
+				return nball
+			}
+		default:
+			time.Sleep(50 * time.Millisecond)
+		}
+	}
 }
 
-func URLSet(urlField, newLimit, offset string) string {
+func urlSet(urlField, newLimit, offset string) string {
 	u, _ := url.Parse(urlField)
 	q := u.Query()
 	q.Set("limit", newLimit)
