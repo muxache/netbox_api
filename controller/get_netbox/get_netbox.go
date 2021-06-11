@@ -27,7 +27,7 @@ func GetFromNetBox(url, token string) model.Netbox_Struct {
 
 	res := get(url, token)
 
-	for i := 1; i < (res.Count / 64); i++ {
+	for i := 0; i < (res.Count / 64); i++ {
 
 		urlList = append(urlList, urlSet(res.Next, "64", strconv.Itoa(64*i)))
 	}

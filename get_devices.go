@@ -7,7 +7,7 @@ import (
 	model "github.com/muxache/netbox_api/data_model/netbox"
 )
 
-//GetALLCircuits allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
+//GetDevices allows get all devices from api 'https://netbox.ti.ru/api/dcim/devices/'
 func GetDevices(url, token string) []model.NetBox_Devices_Get {
 	var (
 		nbDevices []model.NetBox_Devices_Get
