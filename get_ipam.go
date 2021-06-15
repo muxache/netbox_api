@@ -12,6 +12,9 @@ func GetIPAM(url, token string) []model.NetBox_IPAM_Get {
 		nbIPAM []model.NetBox_IPAM_Get
 	)
 	res := get_netbox.GetFromNetBox(url, token)
+	if res.Count == 0 {
+		return nil
+	}
 	for _, r := range res.Results {
 		var nb model.NetBox_IPAM_Get
 		rByte, _ := json.Marshal(r)
