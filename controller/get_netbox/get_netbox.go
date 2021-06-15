@@ -29,6 +29,9 @@ func GetFromNetBox(url, token string) model.Netbox_Struct {
 	if res.Count == 0 {
 		return model.Netbox_Struct{}
 	}
+	if res.Next == "" {
+		return res
+	}
 
 	for i := 0; i < (res.Count / 64); i++ {
 
